@@ -1,0 +1,11 @@
+[project]
+name = "telemed-demo"
+version = "0.1.0"
+description = "Demo Big Data Modul 9: Spark + Neo4j untuk analisis gejala chat telemedicine"
+requires-python = ">=3.10,<3.13"
+dependencies = [
+    "pyspark>=3.5,<3.6",
+    "neo4j>=5.20",
+    "pandas>=2.0",
+    "pyvis>=0.3.2",
+]

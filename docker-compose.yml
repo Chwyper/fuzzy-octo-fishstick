@@ -1,0 +1,20 @@
+services:
+  neo4j:
+    # Seri 5.26 LTS cocok dengan konektor Spark 5.4.x. Kalau `docker compose pull`
+    # gagal karena tag tidak ditemukan, cek tag yang tersedia di Docker Hub (neo4j).
+    image: neo4j:5.26-community
+    container_name: telemed-neo4j
+    ports:
+      - "7474:7474"   # Neo4j Browser (kalau tersedia di versi ini)
+      - "7687:7687"   # Bolt: dipakai driver Python dan konektor Spark
+    environment:
+      NEO4J_AUTH: neo4j/telemed123        # user/password (minimal 8 karakter)
+      # Batasi memori kalau laptop RAM-nya kecil (hapus tanda # untuk mengaktifkan):
+      # NEO4J_server_memory_heap_initial__size: 512m
+      # NEO4J_server_memory_heap_max__size: 512m
+      # NEO4J_server_memory_pagecache_size: 256m
+    volumes:
+      - neo4j_data:/data   # named volume: data tetap ada setelah container dihentikan
+
+volumes:
+  neo4j_data:

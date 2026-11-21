@@ -1,0 +1,73 @@
+[
+  {"chat_id": "C001", "patient_id": "P001", "doctor_id": "D01", "timestamp": "2026-11-18T08:15:00",
+   "messages": [
+     {"from": "patient", "text": "Dok, saya demam dan batuk sejak tiga hari lalu."},
+     {"from": "doctor",  "text": "Apakah ada sesak napas?"},
+     {"from": "patient", "text": "Tidak ada sesak, tapi badan terasa lemas."}
+   ]},
+  {"chat_id": "C002", "patient_id": "P002", "doctor_id": "D01", "timestamp": "2026-11-18T09:40:00",
+   "messages": [
+     {"from": "patient", "text": "Saya pusing dan mual sejak pagi."},
+     {"from": "doctor",  "text": "Sudah makan? Ada muntah?"},
+     {"from": "patient", "text": "Belum makan, rasanya mau muntah terus."}
+   ]},
+  {"chat_id": "C003", "patient_id": "P003", "doctor_id": "D02", "timestamp": "2026-11-18T10:05:00",
+   "messages": [
+     {"from": "patient", "text": "Anak saya demam tinggi dan ada ruam merah di badan."},
+     {"from": "doctor",  "text": "Sudah berapa hari demamnya?"},
+     {"from": "patient", "text": "Dua hari, dan dia juga lemas sekali."}
+   ]},
+  {"chat_id": "C004", "patient_id": "P004", "doctor_id": "D02", "timestamp": "2026-11-18T13:20:00",
+   "messages": [
+     {"from": "patient", "text": "Saya merasa sesak napas dan nyeri dada kalau naik tangga."},
+     {"from": "doctor",  "text": "Apakah disertai keringat dingin?"},
+     {"from": "patient", "text": "Iya, kadang pusing juga."}
+   ]},
+  {"chat_id": "C005", "patient_id": "P005", "doctor_id": "D03", "timestamp": "2026-11-19T07:30:00",
+   "messages": [
+     {"from": "patient", "text": "Sakit tenggorokan dan batuk, badan meriang dari semalam."},
+     {"from": "doctor",  "text": "Ada pilek atau sesak?"},
+     {"from": "patient", "text": "Tanpa sesak, hanya tenggorokan perih."}
+   ]},
+  {"chat_id": "C006", "patient_id": "P006", "doctor_id": "D03", "timestamp": "2026-11-19T11:10:00",
+   "messages": [
+     {"from": "patient", "text": "Saya diare sejak kemarin dan mual."},
+     {"from": "doctor",  "text": "Sudah minum oralit?"},
+     {"from": "patient", "text": "Sudah, tapi masih lemas."}
+   ]},
+  {"chat_id": "C007", "patient_id": "P001", "doctor_id": "D03", "timestamp": "2026-11-19T15:45:00",
+   "messages": [
+     {"from": "patient", "text": "Dok, demam saya belum turun dan sekarang pusing."},
+     {"from": "doctor",  "text": "Tolong cek suhu dan minum cukup."}
+   ]},
+  {"chat_id": "C008", "patient_id": "P007", "doctor_id": "D01", "timestamp": "2026-11-20T08:50:00",
+   "messages": [
+     {"from": "patient", "text": "Batuk berdahak dua minggu, kadang sesak napas malam hari."},
+     {"from": "doctor",  "text": "Ada demam?"},
+     {"from": "patient", "text": "Tidak demam."}
+   ]},
+  {"chat_id": "C009", "patient_id": "P008", "doctor_id": "D02", "timestamp": "2026-11-20T10:25:00",
+   "messages": [
+     {"from": "patient", "text": "Gatal-gatal dan ruam di lengan setelah makan udang."},
+     {"from": "doctor",  "text": "Apakah bibir atau wajah membengkak?"},
+     {"from": "patient", "text": "Tidak ada, hanya gatal."}
+   ]},
+  {"chat_id": "C010", "patient_id": "P009", "doctor_id": "D03", "timestamp": "2026-11-20T14:00:00",
+   "messages": [
+     {"from": "patient", "text": "Mencret dan demam sejak dua hari, badan lemah."},
+     {"from": "doctor",  "text": "Ada darah pada tinja?"},
+     {"from": "patient", "text": "Tidak ada darah, tapi perut mual."}
+   ]},
+  {"chat_id": "C011", "patient_id": "P010", "doctor_id": "D01", "timestamp": "2026-11-21T09:05:00",
+   "messages": [
+     {"from": "patient", "text": "Sakit kepala berat dan mual, mata sensitif cahaya."},
+     {"from": "doctor",  "text": "Sudah pernah mengalami sebelumnya?"},
+     {"from": "patient", "text": "Pernah, biasanya pusing begini kalau kurang tidur."}
+   ]},
+  {"chat_id": "C012", "patient_id": "P011", "doctor_id": "D02", "timestamp": "2026-11-21T10:30:00",
+   "messages": [
+     {"from": "patient", "text": "Demam, batuk, dan sakit tenggorokan sejak kemarin."},
+     {"from": "doctor",  "text": "Apakah ada kontak dengan orang sakit?"},
+     {"from": "patient", "text": "Iya, teman sekantor flu."}
+   ]}
+]
