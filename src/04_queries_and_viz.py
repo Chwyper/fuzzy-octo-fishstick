@@ -68,7 +68,9 @@ def buat_visualisasi(driver):
                          title=label)
         net.add_edge(f"{r['la']}:{r['a']}", f"{r['lb']}:{r['b']}", title=r["tipe"])
 
-    net.write_html(GRAPH_HTML)
+    html_content = net.generate_html()
+    with open(GRAPH_HTML, "w", encoding="utf-8") as f:
+        f.write(html_content)
     print(f"\nGraph disimpan: {GRAPH_HTML}  ({len(rel)} relasi). Buka di browser.")
 
 

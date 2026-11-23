@@ -195,3 +195,26 @@ docker compose down
    > Pendekatan saat ini menggunakan dictionary-based regex untuk keperluan demonstrasi. Untuk skala data jutaan percakapan, kamus kata diganti dengan model NLP bahasa Indonesia (seperti IndoBERT / HuggingFace Pipeline) yang dibungkus dalam Spark Pandas UDF (*User Defined Functions*) agar inferensi model berjalan terdistribusi di seluruh worker node Spark.
 3. **Mengapa menggunakan `MERGE` bukan `CREATE`?**
    > `MERGE` bersifat idempoten (*idempotent*): node/relasi hanya dibuat jika belum ada di graf. Ini memastikan pipeline aman dijalankan berulang kali tanpa risiko duplikasi data.
+
+---
+
+## 9. Tambahan Versi Final: Volume, Velocity, Veracity
+
+- `src/generate_chats.py`: generator chat sintetis (6 profil penyakit berkorelasi, kalimat negasi,
+  pertanyaan dokter yang tidak boleh dihitung sebagai gejala). Mode `--n` untuk Volume, `--stream` untuk Velocity.
+  Setiap chat punya field `label_gejala` (jawaban benar) untuk evaluasi.
+- `src/common.py`: `baca_chat()` membaca file tunggal (array JSON) atau folder (JSON Lines) sesuai variabel
+  lingkungan `CHATS_SOURCE`. Untuk folder, skema diberikan eksplisit agar Spark tidak menebak skema.
+- `src/06_evaluate_extraction.py`: precision/recall ekstraksi terhadap label asli (hanya data sintetis).
+- `src/07_stream_to_neo4j.py`: Spark Structured Streaming memantau `data/stream`, menulis ke Neo4j per micro-batch.
+- `src/03b_load_with_driver.py` kini menulis per batch 5.000 baris.
+
+Tanya-jawab tambahan:
+
+1. **Mengapa `maxPartitionBytes` diturunkan jadi 4 MB?** Default Spark (128 MB) menggabungkan 43 MB data menjadi
+   1 partisi sehingga tidak ada paralelisme. Dengan 4 MB, input terbagi ke beberapa partisi. Ini penyesuaian demo
+   skala kecil, bukan rekomendasi produksi.
+2. **Apakah akurasi 100% berarti ekstraksinya bagus?** Tidak. Data sintetis dibuat dengan negasi sederhana, jadi
+   hasilnya melingkar. Akurasi sebenarnya hanya bisa diukur pada chat nyata berlabel.
+3. **Apakah ini streaming sungguhan?** Ya untuk mekanisme (Structured Streaming, micro-batch), tetapi sumbernya
+   file di folder, bukan Kafka, dan lajunya diatur generator.

@@ -4,8 +4,10 @@ Jalankan:  uv run python src/03_load_with_spark.py
 Pertama kali jalan, Spark mengunduh konektor dari Maven Central (butuh internet).
 Kalau gagal terus, pakai cadangan: src/03b_load_with_driver.py
 """
+import time
+
 from common import (
-    CHATS_PATH, NEO4J_PASSWORD, NEO4J_URI, NEO4J_USER,
+    baca_chat, NEO4J_PASSWORD, NEO4J_URI, NEO4J_USER,
     get_driver, get_spark, init_schema,
 )
 from symptoms import extract_symptoms
@@ -36,12 +38,13 @@ def main():
 
     # 2) Spark: baca JSON -> ekstrak gejala
     spark = get_spark("load-neo4j", with_neo4j=True)
-    chats = spark.read.option("multiLine", "true").json(CHATS_PATH)
+    chats = baca_chat(spark)
     hasil = extract_symptoms(chats)
     print(f"Akan menulis {hasil.count()} baris ke Neo4j...")
 
     # 3) Tulis ke Neo4j. coalesce(1): satu partisi = satu penulis, sehingga tidak ada
     #    transaksi paralel yang saling mengunci (deadlock) pada node yang sama.
+    t0 = time.time()
     (
         hasil.coalesce(1).write.format("org.neo4j.spark.DataSource")
         .mode("Append")
@@ -51,7 +54,7 @@ def main():
         .option("query", WRITE_QUERY)
         .save()
     )
-    print("Selesai menulis.")
+    print(f"Selesai menulis. Waktu tulis ke Neo4j: {time.time() - t0:.1f} detik")
 
     # 4) Bukti integrasi dua arah: baca kembali dari Neo4j ke DataFrame Spark
     kembali = (

@@ -8,4 +8,6 @@ dependencies = [
     "neo4j>=5.20",
     "pandas>=2.0",
     "pyvis>=0.3.2",
+    "streamlit>=1.65.0",
+    "plotly>=7.1.0",
 ]

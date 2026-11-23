@@ -5,3 +5,5 @@ spark-warehouse/
 metastore_db/
 derby.log
 src/lib/
+data/synthetic/
+data/stream/

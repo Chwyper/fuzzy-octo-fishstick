@@ -19,7 +19,14 @@ if os.name == "nt":
             os.environ["PATH"] = r"C:\hadoop\bin;" + os.environ.get("PATH", "")
 
 ROOT = Path(__file__).resolve().parent.parent
+# Sumber data chat. Bisa satu file array JSON (default, 12 chat dummy) ATAU folder
+# berisi file JSON Lines hasil generate_chats.py (mis. data/synthetic, 100 ribu chat).
+# Ganti tanpa mengedit kode:  CHATS_SOURCE=data/synthetic uv run python src/02_...
 CHATS_PATH = str(ROOT / "data" / "chats.json")
+CHATS_SOURCE = os.getenv("CHATS_SOURCE", CHATS_PATH)
+if not os.path.isabs(CHATS_SOURCE):
+    CHATS_SOURCE = str(ROOT / CHATS_SOURCE)
+STREAM_DIR = str(ROOT / "data" / "stream")
 GRAPH_HTML = str(ROOT / "graph.html")
 
 NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
@@ -35,6 +42,26 @@ NEO4J_SPARK_CONNECTOR = (
 )
 
 
+def _chat_schema():
+    from pyspark.sql.types import ArrayType, StringType, StructField, StructType
+
+    return StructType([
+        StructField("chat_id", StringType()),
+        StructField("patient_id", StringType()),
+        StructField("doctor_id", StringType()),
+        StructField("timestamp", StringType()),
+        StructField("messages", ArrayType(StructType([
+            StructField("from", StringType()),
+            StructField("text", StringType()),
+        ]))),
+        StructField("label_gejala", ArrayType(StringType())),  # hanya ada di data sintetis
+    ])
+
+
+def get_chat_schema():
+    return _chat_schema()
+
+
 def get_spark(app_name: str = "telemed-demo", with_neo4j: bool = False):
     """Buat SparkSession lokal. Konektor Neo4j hanya dimuat kalau diminta."""
     from pyspark.sql import SparkSession
@@ -42,7 +69,10 @@ def get_spark(app_name: str = "telemed-demo", with_neo4j: bool = False):
     builder = (
         SparkSession.builder.appName(app_name)
         .master("local[*]")
-        .config("spark.sql.shuffle.partitions", "4")  # data kecil, cukup 4
+        .config("spark.sql.shuffle.partitions", "8")
+        # Default Spark (128 MB/partisi) menggabungkan 43 MB data jadi 1 partisi, sehingga
+        # tidak ada paralelisme. 4 MB membuat 100 ribu chat terbagi ke beberapa partisi.
+        .config("spark.sql.files.maxPartitionBytes", str(4 * 1024 * 1024))
         .config("spark.ui.showConsoleProgress", "false")
     )
     if with_neo4j:
@@ -50,6 +80,20 @@ def get_spark(app_name: str = "telemed-demo", with_neo4j: bool = False):
     spark = builder.getOrCreate()
     spark.sparkContext.setLogLevel("WARN")
     return spark
+
+
+def baca_chat(spark, sumber: str = None):
+    """Baca chat dari file tunggal (array JSON) atau folder (JSON Lines).
+
+    - File  : multiLine=true, karena isinya satu array JSON.
+    - Folder: JSON Lines, satu chat per baris (bisa dipecah per bagian, jadi Spark
+      dapat membaginya ke beberapa partisi). Skema diberikan eksplisit supaya Spark
+      tidak perlu memindai seluruh data hanya untuk menebak skema.
+    """
+    sumber = sumber or CHATS_SOURCE
+    if os.path.isdir(sumber):
+        return spark.read.schema(get_chat_schema()).json(sumber)
+    return spark.read.option("multiLine", "true").json(sumber)
 
 
 def get_driver():
